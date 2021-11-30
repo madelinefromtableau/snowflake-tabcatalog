@@ -24,12 +24,12 @@ Note: you **cannot** get table LUID from MDAPI by querying tables object alone, 
 
 Then, using Tableau Metadata Methods REST API, you can easily publish descriptions to columns in a table. These cascade down to all published datasources using these columns. 
 
-[Technical requirements](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJdf9a9fb357bd4b6d9a755d9c4)
-[authenticate_snowflake](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ1540c01a89804aa4875b3f3ec)
-[authenticate_tableau](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ0f41dbdca55f4cf5948217f81)
-[get_table_luids](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJe40f69a6dd984c8593a285900)
-[get_table_id](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ313eb142404a47cabd104c69c)
-[get_snow_descriptions](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ90a526109eca4e319149eaa82)
+[Technical requirements](### Technical requirements)
+[authenticate_snowflake](### authenticate_snowflake)
+[authenticate_tableau](### authenticate_tableau)
+[get_table_luids](### get_table_luids)
+[get_table_id](### get_table_id)
+[get_snow_descriptions](### get_snow_descriptions)
 [get_list_of_columns](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ2b4caac8b5ff4bf3944134745)
 [add_comments_to_tab_table](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ64aa94da3625439ba9c4f6b17)
 [publish_description_to_column](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ19d3ecf1ec8d46fcbf268334c)
@@ -261,6 +261,7 @@ pandas dataframe with COLUMN_NAME (str), COMMENT (str)
 Then, grab all columns IDs in each Tableau Table. We will need column IDs to send the right REST commands.
 * * *
 
+ 
 ### get_list_of_columns
 
 https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_metadata.htm#query_columns
