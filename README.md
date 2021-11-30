@@ -24,16 +24,6 @@ Note: you **cannot** get table LUID from MDAPI by querying tables object alone, 
 
 Then, using Tableau Metadata Methods REST API, you can easily publish descriptions to columns in a table. These cascade down to all published datasources using these columns. 
 
-[Technical requirements](### Technical requirements)
-[authenticate_snowflake](### authenticate_snowflake)
-[authenticate_tableau](### authenticate_tableau)
-[get_table_luids](### get_table_luids)
-[get_table_id](### get_table_id)
-[get_snow_descriptions](### get_snow_descriptions)
-[get_list_of_columns](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ2b4caac8b5ff4bf3944134745)
-[add_comments_to_tab_table](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ64aa94da3625439ba9c4f6b17)
-[publish_description_to_column](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ19d3ecf1ec8d46fcbf268334c)
-[update_table_descriptions](https://salesforce.quip.com/JylsAIZp3lgV#temp:C:IEJ769c93f0f4ad4ae2944ae01a0)
 
 ### Technical requirements
 
@@ -100,7 +90,7 @@ token_name
 site name
 
 **Output**
-string of temp token
+list with string of temp token, site id
 
 
 ```
@@ -132,7 +122,7 @@ def authenticate_tableau(url_name,PAT,site_name, token_name):
     
     req_strings=[token,site_id]
     return(req_strings)
-    return(token)
+
 ```
 
 * * *
@@ -238,30 +228,34 @@ Now that we have the table IDs and Names, we can get comments from snowflake and
 
 ### get_snow_descriptions
 
-using Kevin Campbell’s example query
+using Kevin Campbell's example query
 https://community.snowflake.com/s/question/0D50Z00009Iba87SAB/how-can-i-get-the-comments-associated-with-my-table-column-using-the-getddl-statement
 
-This assumes you have put the database in the authenticate_snowflake function. if you wanted to have the database be dynamic, add it as a parameter to the function and add the command cs.execute(“USE DATABASE <database name>”)
-(see here: https://docs.snowflake.com/en/sql-reference/sql/use-database.html#use-database)
+This assumes you have put the database in the authenticate_snowflake function. if you wanted to have the database be dynamic, add it as a parameter to the function
+and add the command 
+```'cs.execute(“USE DATABASE <database name>”)'```
 
-```
-def get_snow_descriptions(cursor_object, table_name):
-    desc_table_pandas = cursor_object.execute("select column_name, comment from information_schema.columns where table_name = '"+table_name+"';").fetch_pandas_all()
-    return(desc_table_pandas)
-```
+see here: https://docs.snowflake.com/en/sql-reference/sql/use-database.html#use-database
 
+    
 **Input**
 table_name
 cursor object (from auth function)
 
 **Output**
 pandas dataframe with COLUMN_NAME (str), COMMENT (str)
+    
+```
+def get_snow_descriptions(cursor_object, table_name):
+    desc_table_pandas = cursor_object.execute("select column_name, comment from information_schema.columns where table_name = '"+table_name+"';").fetch_pandas_all()
+    return(desc_table_pandas)
+```
 
 * * *
 Then, grab all columns IDs in each Tableau Table. We will need column IDs to send the right REST commands.
 * * *
+    
 
- 
 ### get_list_of_columns
 
 https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_metadata.htm#query_columns
@@ -357,7 +351,6 @@ column_id
 description_text
 token
 **Output**
-success string
 
 ```
 def publish_description_to_column(url_name,site_id,table_id,column_id, description_text,token):
@@ -372,7 +365,7 @@ def publish_description_to_column(url_name,site_id,table_id,column_id, descripti
     column_description_response = requests.request("PUT", column_description_url, headers=headers, data=payload)
 
     column_description_response_code = column_description_response.text
-    return('Success')
+    return
 ```
 
 * * *
@@ -387,14 +380,13 @@ table_id
 token
 
 **Output**
-success string
 
 
 ```
 def update_table_descriptions(tab_data_frame, table_id, token):
     for index, rows in tab_data_frame.itterows():
         publish_description_to_column(table_id,tab_data_frame['column_id'], tab_data_frame['COMMENT'],token)
-    return('Success overall')
+    return
 ```
 
 
